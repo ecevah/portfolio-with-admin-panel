@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+<body>
+    <div class="layout">
+        <!-- Sidebar Overlay for Mobile -->
+        <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+        
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="brand">🚀 Yönetim Paneli</div>
+            <ul class="menu">
+                <li><a href="/hosgeldin/sahip/panel">📊 Genel Bakış</a></li>
+                <% (modules || []).forEach(function(m){ %>
+                    <li><a class="<%= m.slug === slug ? 'active' : '' %>" href="/hosgeldin/sahip/manage/<%= m.slug %>">📁 <%= m.name %></a></li>
+                <% }) %>
+                <li style="margin-top: auto;"><a href="/hosgeldin/sahip/logout">🚪 Çıkış</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content">
+            <div class="topbar">
+                <div class="topbar-left">
+                    <button class="menu-toggle" onclick="toggleSidebar()" aria-label="Menüyü Aç/Kapat">☰</button>
+                    <div>
+                        <h1 class="title"><%= title %></h1>
+                        <p class="subtitle">Kayıtlarınızı düzenleyin</p>
+                    </div>
+                </div>
+                <div>
+                    <a class="btn btn-primary" href="/hosgeldin/sahip/manage/<%= slug %>/new">➕ Yeni Ekle</a>
+                </div>
+            </div>
+
+            <!-- Table Container -->
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <% if (meta && meta.fields) { %>
+                                <% meta.fields.forEach(function(field) { %>
+                                    <% if (field.type !== 'password') { %>
+                                        <th><%= field.label || field.name %></th>
+                                    <% } %>
+                                <% }) %>
+                            <% } %>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% (items || []).forEach(function(item) { %>
+                            <tr>
+                                <td><code><%= item._id %></code></td>
+                                <% if (meta && meta.fields) { %>
+                                    <% meta.fields.forEach(function(field) { %>
+                                        <% if (field.type === 'password') { return; } %>
+                                        <td>
+                                            <% if (field.type === 'file' && item[field.name]) { %>
+                                                <img src="<%= item[field.name] %>" alt="<%= field.label || field.name %>" style="max-width: 50px; max-height: 50px; border-radius: 4px;">
+                                            <% } else if (field.type === 'textarea' && item[field.name]) { %>
+                                                <div style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="<%= item[field.name] %>">
+                                                    <%= item[field.name].substring(0, 50) %><%= item[field.name].length > 50 ? '...' : '' %>
+                                                </div>
+                                            <% } else if (field.type === 'ref' && item[field.name]) { %>
+                                                <code><%= item[field.name] %></code>
+                                            <% } else { %>
+                                                <%= item[field.name] || '-' %>
+                                            <% } %>
+                                        </td>
+                                    <% }) %>
+                                <% } %>
+                                <td class="table-actions">
+                                    <a class="btn btn-secondary btn-small" href="/hosgeldin/sahip/manage/<%= slug %>/<%= item._id %>/edit">✏️ Düzenle</a>
+                                    <a class="btn btn-danger btn-small" href="/hosgeldin/sahip/manage/<%= slug %>/<%= item._id %>/delete" onclick="return confirm('Bu kaydı silmek istediğinizden emin misiniz?')">🗑️ Sil</a>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Empty State -->
+            <% if (!items || items.length === 0) { %>
+                <div class="card" style="text-align: center; padding: 60px 20px;">
+                    <div style="font-size: 48px; margin-bottom: 16px;">📭</div>
+                    <h3 style="margin-bottom: 8px; color: #64748b;">Henüz kayıt yok</h3>
+                    <p style="color: #94a3b8; margin-bottom: 24px;">İlk kaydınızı eklemek için aşağıdaki butona tıklayın</p>
+                    <a class="btn btn-primary" href="/hosgeldin/sahip/manage/<%= slug %>/new">➕ İlk Kaydı Ekle</a>
+                </div>
+            <% } %>
+            
+            <!-- Mobile FAB -->
+            <a class="fab" href="/hosgeldin/sahip/manage/<%= slug %>/new" aria-label="Yeni Ekle">＋</a>
+        </main>
+    </div>
+
+    <script>
+        // Close sidebar when clicking a menu link (mobile UX)
+        document.querySelectorAll('#sidebar .menu a').forEach(function(a){
+            a.addEventListener('click', function(){
+                if (window.innerWidth <= 1024) closeSidebar();
+            })
+        })
+
+        // Topbar shadow on scroll
+        const topbar = document.querySelector('.topbar');
+        window.addEventListener('scroll', function(){
+            if (window.scrollY > 6) topbar.classList.add('scrolled');
+            else topbar.classList.remove('scrolled');
+        });
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('open');
+            document.body.classList.toggle('sidebar-open');
+        }
+
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            document.body.classList.remove('sidebar-open');
+        }
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.querySelector('.menu-toggle');
+            
+            if (window.innerWidth <= 1024 && 
+                !sidebar.contains(event.target) && 
+                !menuToggle.contains(event.target)) {
+                closeSidebar();
+            }
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 1024) {
+                closeSidebar();
+            }
+        });
+    </script>
+</body>
+</html>
+
+

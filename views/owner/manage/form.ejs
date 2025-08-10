@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+<body>
+    <div class="layout">
+        <!-- Sidebar Overlay for Mobile -->
+        <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+        
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="brand">🚀 Yönetim Paneli</div>
+            <ul class="menu">
+                <li><a href="/hosgeldin/sahip/panel">📊 Genel Bakış</a></li>
+                <% (modules || []).forEach(function(m){ %>
+                    <li><a class="<%= m.slug === slug ? 'active' : '' %>" href="/hosgeldin/sahip/manage/<%= m.slug %>">📁 <%= m.name %></a></li>
+                <% }) %>
+                <li style="margin-top: auto;"><a href="/hosgeldin/sahip/logout">🚪 Çıkış</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content">
+            <div class="topbar">
+                <div class="topbar-left">
+                    <button class="menu-toggle" onclick="toggleSidebar()" aria-label="Menüyü Aç/Kapat">☰</button>
+                    <div>
+                        <h1 class="title"><%= title %></h1>
+                        <p class="subtitle">Alanları doldurup kaydedin</p>
+                    </div>
+                </div>
+                <div>
+                    <a class="btn btn-secondary" href="/hosgeldin/sahip/manage/<%= slug %>">⬅️ Geri Dön</a>
+                </div>
+            </div>
+
+            <!-- Error Alert -->
+            <% if (typeof error !== 'undefined' && error) { %>
+                <div class="alert alert-error">
+                    ❌ <%= error %>
+                </div>
+            <% } %>
+
+            <!-- Form -->
+            <div class="form-card">
+                <form method="post" enctype="multipart/form-data">
+                    <% if (meta && meta.fields) { %>
+                        <% var isEdit = !!(item && item._id); %>
+                        <% meta.fields.forEach(function(field) { %>
+                            <% if (isEdit && field.onlyCreate) { return; } %>
+                            <% if (!isEdit && field.onlyEdit) { return; } %>
+                            <% var value = (field.type === 'password') ? '' : (item && item[field.name] ? item[field.name] : ''); %>
+                            <div class="form-group">
+                                <label for="<%= field.name %>">
+                                    <%= field.label || field.name %>
+                                    <% if ((item && item._id) ? (field.required && !field.onlyCreate) : (field.required && !field.onlyEdit)) { %>
+                                        <span style="color: #ef4444;">*</span>
+                                    <% } %>
+                                </label>
+                                
+                                <% if (field.type === 'textarea') { %>
+                                    <textarea 
+                                        class="form-control" 
+                                        name="<%= field.name %>" 
+                                        id="<%= field.name %>"
+                                        rows="4"
+                                        placeholder="<%= field.label || field.name %> giriniz"
+                                        <%= (!item._id && field.required && !field.onlyEdit) ? 'required' : '' %>
+                                    ><%= value %></textarea>
+                                
+                                <% } else if (field.type === 'file') { %>
+                                    <input 
+                                        class="form-control" 
+                                        type="file" 
+                                        name="<%= field.name %>" 
+                                        id="<%= field.name %>"
+                                        accept="image/*"
+                                        <%= (!item._id && field.required && !field.onlyEdit) ? 'required' : '' %>
+                                    />
+                                    <% if (item && item._id && item[field.name]) { %>
+                                        <div style="margin-top: 8px; padding: 12px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+                                            <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">Mevcut dosya:</div>
+                                            <div style="font-family: monospace; font-size: 13px; color: #374151;"><%= item[field.name] %></div>
+                                            <% if (item[field.name].match(/\.(jpg|jpeg|png|gif|webp)$/i)) { %>
+                                                <img src="<%= item[field.name] %>" alt="Mevcut görsel" style="max-width: 100px; max-height: 100px; margin-top: 8px; border-radius: 4px;">
+                                            <% } %>
+                                        </div>
+                                    <% } %>
+                                
+                                <% } else if (field.type === 'ref') { %>
+                                    <% if (field.ref === 'Project' && refOptions && refOptions.projectId && refOptions.projectId.length > 0) { %>
+                                        <select class="form-control" name="<%= field.name %>" id="<%= field.name %>" <%= ((!item._id && field.required && !field.onlyEdit) || (item._id && field.required && !field.onlyCreate)) ? 'required' : '' %>>
+                                            <option value="">-- Proje Seçiniz --</option>
+                                            <% refOptions.projectId.forEach(function(project){ %>
+                                                <option value="<%= project._id %>" <%= String(value) === String(project._id) ? 'selected' : '' %>>
+                                                    <%= project.name %>
+                                                </option>
+                                            <% }) %>
+                                        </select>
+                                    <% } else { %>
+                                        <input 
+                                            class="form-control" 
+                                            type="text" 
+                                            name="<%= field.name %>" 
+                                            id="<%= field.name %>"
+                                            value="<%= value %>" 
+                                            placeholder="<%= field.ref %> ObjectId giriniz"
+                                            <%= ((!item._id && field.required && !field.onlyEdit) || (item._id && field.required && !field.onlyCreate)) ? 'required' : '' %>
+                                        />
+                                    <% } %>
+                                
+                                <% } else if (field.type === 'enum') { %>
+                                    <select class="form-control" name="<%= field.name %>" id="<%= field.name %>" <%= ((!item._id && field.required && !field.onlyEdit) || (item._id && field.required && !field.onlyCreate)) ? 'required' : '' %>>
+                                        <option value="">-- Seçiniz --</option>
+                                        <% (field.enum || []).forEach(function(option){ %>
+                                            <option value="<%= option %>" <%= String(value) === String(option) ? 'selected' : '' %>>
+                                                <%= option %>
+                                            </option>
+                                        <% }) %>
+                                    </select>
+                                
+                                <% } else if (field.type === 'number') { %>
+                                    <input 
+                                        class="form-control" 
+                                        type="number" 
+                                        name="<%= field.name %>" 
+                                        id="<%= field.name %>"
+                                        value="<%= value %>" 
+                                        placeholder="<%= field.label || field.name %> giriniz"
+                                        <%= ((!item._id && field.required && !field.onlyEdit) || (item._id && field.required && !field.onlyCreate)) ? 'required' : '' %>
+                                    />
+                                
+                                <% } else { %>
+                                    <input 
+                                        class="form-control" 
+                                        type="<%= field.type === 'password' ? 'password' : 'text' %>" 
+                                        name="<%= field.name %>" 
+                                        id="<%= field.name %>"
+                                        value="<%= value %>" 
+                                        placeholder="<%= field.label || field.name %> giriniz"
+                                        <%= ((!item._id && field.required && !field.onlyEdit) || (item._id && field.required && !field.onlyCreate)) ? 'required' : '' %>
+                                    />
+                                <% } %>
+                                
+                                <% if (field.type === 'password') { %>
+                                    <div style="margin-top: 4px; font-size: 12px; color: #64748b;">
+                                        Şifre en az 6 karakter olmalıdır
+                                    </div>
+                                <% } %>
+                            </div>
+                        <% }) %>
+                    <% } %>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            💾 <%= item && item._id ? 'Güncelle' : 'Kaydet' %>
+                        </button>
+                        <a class="btn btn-secondary" href="/hosgeldin/sahip/manage/<%= slug %>">
+                            ❌ İptal
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Close sidebar when clicking a menu link (mobile UX)
+        document.querySelectorAll('#sidebar .menu a').forEach(function(a){
+            a.addEventListener('click', function(){
+                if (window.innerWidth <= 1024) closeSidebar();
+            })
+        })
+
+        // Topbar shadow on scroll
+        const topbar = document.querySelector('.topbar');
+        window.addEventListener('scroll', function(){
+            if (window.scrollY > 6) topbar.classList.add('scrolled');
+            else topbar.classList.remove('scrolled');
+        });
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('open');
+            document.body.classList.toggle('sidebar-open');
+        }
+
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            document.body.classList.remove('sidebar-open');
+        }
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.querySelector('.menu-toggle');
+            
+            if (window.innerWidth <= 1024 && 
+                !sidebar.contains(event.target) && 
+                !menuToggle.contains(event.target)) {
+                closeSidebar();
+            }
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 1024) {
+                closeSidebar();
+            }
+        });
+
+        // Form validation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const requiredFields = document.querySelectorAll('[required]');
+            let isValid = true;
+            
+            requiredFields.forEach(function(field) {
+                if (!field.value.trim()) {
+                    field.style.borderColor = '#ef4444';
+                    isValid = false;
+                } else {
+                    field.style.borderColor = '#e2e8f0';
+                }
+            });
+            
+            if (!isValid) {
+                e.preventDefault();
+                alert('Lütfen tüm zorunlu alanları doldurunuz.');
+            }
+        });
+    </script>
+</body>
+</html>
+
+

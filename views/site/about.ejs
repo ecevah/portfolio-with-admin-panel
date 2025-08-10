@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>About - Nehir</title>
+  <link rel="icon" href="/images/favico.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/stylesheets/site.css" />
+</head>
+<body>
+  <!-- Fixed Header -->
+  <header class="header">
+    <div class="container">
+      <div class="header-content">
+        <button class="menu-toggle" aria-label="Menüyü aç/kapat" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <nav class="nav-left">
+          <% (siteConfig && siteConfig.nav ? siteConfig.nav : [{label:'Home',href:'/'},{label:'About',href:'/about'},{label:'Projects',href:'/projects'}]).forEach(function(item){ %>
+            <a href="<%= item.href %>"><%= item.label %></a>
+          <% }) %>
+        </nav>
+        <a href="/" class="logo">
+          <% if (siteConfig && siteConfig.logoPath) { %>
+            <img src="<%= siteConfig.logoPath %>" alt="Logo" />
+          <% } else { %>
+            <span><%= siteConfig && siteConfig.siteName ? siteConfig.siteName : 'Nehir' %></span>
+          <% } %>
+        </a>
+        <div class="social-links">
+          <% (siteConfig && siteConfig.socialLinks ? siteConfig.socialLinks : []).forEach(function(s){ %>
+            <a href="<%= s.url %>" target="_blank" rel="noopener" title="<%= s.name %>">
+              <img src="<%= s.icon %>" alt="<%= s.name %>" />
+            </a>
+          <% }) %>
+        </div>
+      </div>
+    </div>
+    <nav class="mobile-nav" aria-label="Mobil Menü">
+      <div class="mobile-inner">
+        <div class="mobile-top">
+          <a href="/" class="mobile-logo" aria-label="Ana sayfa">
+            <% if (siteConfig && siteConfig.logoPath) { %>
+              <img src="<%= siteConfig.logoPath %>" alt="Logo" />
+            <% } else { %>
+              <span><%= siteConfig && siteConfig.siteName ? siteConfig.siteName : 'Nehir' %></span>
+            <% } %>
+          </a>
+          <button class="menu-close" aria-label="Menüyü kapat">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+        <div class="mobile-links">
+          <% (siteConfig && siteConfig.nav ? siteConfig.nav : [{label:'Home',href:'/'},{label:'About',href:'/about'},{label:'Projects',href:'/projects'}]).forEach(function(item){ %>
+            <a href="<%= item.href %>"><%= item.label %></a>
+          <% }) %>
+        </div>
+        <div class="mobile-socials">
+          <% (siteConfig && siteConfig.socialLinks ? siteConfig.socialLinks : []).forEach(function(s){ %>
+            <a href="<%= s.url %>" target="_blank" rel="noopener" title="<%= s.name %>">
+              <img src="<%= s.icon %>" alt="<%= s.name %>" />
+            </a>
+          <% }) %>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- About Section -->
+  <section class="section" style="padding-top: 8rem;">
+    <div class="container">
+      <div class="about-content">
+        <div class="about-text">
+          <h1><%= (about && (about.title || about.header)) ? (about.title || about.header) : 'Hakkımda' %></h1>
+          <% if (about && about.header) { %>
+            <p><%= about.header %></p>
+          <% } %>
+
+          <% if (details && details.length > 0) { %>
+            <div style="margin-top: 1.5rem;">
+              <% details.forEach(function(detail) { %>
+                <div style="margin-bottom: 1.25rem;">
+                  <p style="font-size: 1rem; color: var(--muted); font-weight: 300;"><%= detail.content %></p>
+                </div>
+              <% }) %>
+            </div>
+          <% } else { %>
+            <p>Merhaba! Ben Nehir, Türkiye'den bir endüstriyel tasarımcıyım. Kullanıcı odaklı ürünler, deneyimler ve görsel hikayeler tasarlıyorum.</p>
+          <% } %>
+        </div>
+        <div class="about-image">
+          <% if (photos && photos.length > 0) { %>
+            <img src="<%= photos[0].url %>" alt="Nehir" />
+          <% } else { %>
+            <div style="width: 100%; height: 500px; background: #f5f5f5; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 1.125rem; font-weight: 300;">
+              Profil Fotoğrafı
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Photos Grid Section -->
+  <% if (photos && photos.length > 1) { %>
+    <section class="about-photos-strip" aria-label="Fotoğraflar">
+      <div class="about-photos-track">
+        <% var strip = photos.slice(1); var dup = strip.concat(strip); %>
+        <% dup.forEach(function(photo){ %>
+          <div class="about-photos-item">
+            <img src="<%= photo.url %>" alt="Fotoğraf" />
+          </div>
+        <% }) %>
+      </div>
+    </section>
+  <% } else { %>
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Fotoğraflar</h2>
+          <p class="section-subtitle">Çalışma ortamım ve projelerimden kareler</p>
+        </div>
+        <div class="projects-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+          <div class="project-card fade-in">
+            <div class="project-image" style="height: 250px; background: #f5f5f5; display: flex; align-items: center; justify-content: center; color: var(--muted); font-weight: 400;">
+              Çalışma Masası
+            </div>
+            <div class="project-content">
+              <h3 class="project-title">Çalışma Masası</h3>
+              <p class="project-description">Günlük tasarım süreçlerimde kullandığım çalışma alanı.</p>
+            </div>
+          </div>
+          
+          <div class="project-card fade-in" style="animation-delay: 0.1s;">
+            <div class="project-image" style="height: 250px; background: #f5f5f5; display: flex; align-items: center; justify-content: center; color: var(--muted); font-weight: 400;">
+              Prototip Atölyesi
+            </div>
+            <div class="project-content">
+              <h3 class="project-title">Prototip Atölyesi</h3>
+              <p class="project-description">Fikirlerimi somutlaştırdığım prototip çalışma alanı.</p>
+            </div>
+          </div>
+          
+          <div class="project-card fade-in" style="animation-delay: 0.2s;">
+            <div class="project-image" style="height: 250px; background: #f5f5f5; display: flex; align-items: center; justify-content: center; color: var(--muted); font-weight: 400;">
+              Tasarım Araçları
+            </div>
+            <div class="project-content">
+              <h3 class="project-title">Tasarım Araçları</h3>
+              <p class="project-description">Kullandığım dijital ve analog tasarım araçları.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  <% } %>
+
+  <!-- Experience Summary Section -->
+  <% if (summaries && summaries.length > 0) { %>
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Experience Summary</h2>
+        </div>
+        <div class="quotes-grid" style="max-width: 800px;">
+          <% summaries.forEach(function(s, index) { %>
+            <div class="quote-card fade-in">
+              <strong><%= s.year %></strong> - <%= s.who %>: <%= s.content %>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+    </section>
+  <% } else { %>
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Experience Summary</h2>
+        </div>
+        <div class="quotes-grid" style="max-width: 800px;">
+          <div class="quote-card fade-in">
+            <strong>2023 - Günümüz</strong> - Loop Earplugs, Antwerp: Endüstriyel tasarımcı olarak çalışıyorum.
+          </div>
+          <div class="quote-card fade-in" style="animation-delay: 0.1s;">
+            <strong>2021 - 2023</strong> - Freelance Tasarımcı: Çeşitli projelerde endüstriyel tasarım hizmetleri.
+          </div>
+          <div class="quote-card fade-in" style="animation-delay: 0.2s;">
+            <strong>2019 - 2021</strong> - Tasarım Stajyeri: Farklı şirketlerde tasarım süreçlerini öğrendim.
+          </div>
+        </div>
+      </div>
+    </section>
+  <% } %>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-cta">
+        <div class="footer-left">
+          <h3 class="footer-head">Let’s work together!</h3>
+          <div class="footer-socials">
+            <% (siteConfig && siteConfig.socialLinks ? siteConfig.socialLinks : []).forEach(function(s){ %>
+              <a href="<%= s.url %>" target="_blank" rel="noopener" title="<%= s.name %>">
+                <img src="<%= s.icon %>" alt="<%= s.name %>" />
+              </a>
+            <% }) %>
+          </div>
+        </div>
+        <div class="footer-right">
+          <a class="footer-email" href="mailto:nehir@gmail.com">nehir@gmail.com</a>
+        </div>
+      </div>
+      <div class="footer-bottom">© 2025 Burcu Nehir Tüm</div>
+    </div>
+  </footer>
+
+  <script>
+    // Fade in animation on scroll
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.fade-in').forEach(el => { observer.observe(el); });
+
+    // Mobile nav toggle
+    (function(){
+      const toggle = document.querySelector('.menu-toggle');
+      const mobile = document.querySelector('.mobile-nav');
+      if (!toggle || !mobile) return;
+      toggle.addEventListener('click', function(){
+        const isOpen = document.body.classList.toggle('nav-open');
+        toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+      window.addEventListener('resize', function(){
+        if (window.innerWidth > 768 && document.body.classList.contains('nav-open')) {
+          document.body.classList.remove('nav-open');
+          toggle.setAttribute('aria-expanded', 'false');
+        }
+      });
+      const closer = document.querySelector('.menu-close');
+      if (closer) closer.addEventListener('click', function(){
+        document.body.classList.remove('nav-open');
+        toggle && toggle.setAttribute('aria-expanded', 'false');
+      });
+    })();
+
+    // About photos strip: drag-to-scroll + infinite wrap
+    (function(){
+      const strip = document.querySelector('.about-photos-strip');
+      const track = document.querySelector('.about-photos-track');
+      if (!strip || !track) return;
+
+      // Duplicate content once more at runtime for smoother wrap if short
+      if (track.children.length > 0 && track.children.length < 12) {
+        track.innerHTML += track.innerHTML;
+      }
+
+      let isDown = false; let startX = 0; let scrollLeft = 0;
+      strip.addEventListener('mousedown', (e)=>{ isDown = true; strip.classList.add('is-dragging'); startX = e.pageX - strip.offsetLeft; scrollLeft = strip.scrollLeft; });
+      strip.addEventListener('mouseleave', ()=>{ isDown = false; strip.classList.remove('is-dragging'); });
+      strip.addEventListener('mouseup', ()=>{ isDown = false; strip.classList.remove('is-dragging'); });
+      strip.addEventListener('mousemove', (e)=>{
+        if (!isDown) return; e.preventDefault();
+        const x = e.pageX - strip.offsetLeft; const walk = (x - startX) * 1.2; strip.scrollLeft = scrollLeft - walk;
+        // wrap-around for infinite feel
+        const maxScroll = track.scrollWidth / 2; // since we duplicated once in template
+        if (strip.scrollLeft <= 0) { strip.scrollLeft = maxScroll + strip.scrollLeft; }
+        if (strip.scrollLeft >= maxScroll) { strip.scrollLeft = strip.scrollLeft - maxScroll; }
+      });
+      // Touch support
+      let touchStartX = 0; let touchScrollLeft = 0;
+      strip.addEventListener('touchstart', (e)=>{ const t=e.touches[0]; touchStartX = t.pageX; touchScrollLeft = strip.scrollLeft; }, {passive:true});
+      strip.addEventListener('touchmove', (e)=>{ const t=e.touches[0]; const dx = (t.pageX - touchStartX) * 1.1; strip.scrollLeft = touchScrollLeft - dx; const maxScroll = track.scrollWidth / 2; if (strip.scrollLeft <= 0) { strip.scrollLeft = maxScroll + strip.scrollLeft; } if (strip.scrollLeft >= maxScroll) { strip.scrollLeft = strip.scrollLeft - maxScroll; } }, {passive:true});
+    })();
+  </script>
+</body>
+</html>
+
+

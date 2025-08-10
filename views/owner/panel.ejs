@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+<body>
+    <div class="layout">
+        <!-- Sidebar Overlay for Mobile -->
+        <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+        
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="brand">🚀 Yönetim Paneli</div>
+            <ul class="menu">
+                <li><a href="/hosgeldin/sahip/panel" class="active">📊 Genel Bakış</a></li>
+                <% (modules || []).forEach(function(m){ %>
+                    <li><a href="/hosgeldin/sahip/manage/<%= m.slug %>">📁 <%= m.name %></a></li>
+                <% }) %>
+                <li style="margin-top: auto;"><a href="/hosgeldin/sahip/logout">🚪 Çıkış</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content">
+            <div class="topbar">
+                <div class="topbar-left">
+                    <button class="menu-toggle" onclick="toggleSidebar()" aria-label="Menüyü Aç/Kapat">☰</button>
+                    <div>
+                        <h1 class="title">Genel Bakış</h1>
+                        <p class="subtitle">İçeriklerinizi buradan yönetin</p>
+                    </div>
+                </div>
+                <div class="user-info">
+                    👤 Merhaba, <%= username %>
+                </div>
+            </div>
+
+            <!-- Dashboard Cards -->
+            <div class="grid">
+                <% (modules || []).forEach(function(m){ %>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-meta">Modül</div>
+                            <div class="card-title"><%= m.name %></div>
+                            <div class="badge">Toplam <%= m.count %> kayıt</div>
+                        </div>
+                        <div class="card-actions">
+                            <a class="btn btn-secondary" href="/hosgeldin/sahip/manage/<%= m.slug %>">📋 Listele</a>
+                            <a class="btn btn-primary" href="/hosgeldin/sahip/manage/<%= m.slug %>/new">➕ Yeni Ekle</a>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="card">
+                <div class="card-body">
+                    <h3 style="margin-bottom: 16px; color: #1e293b;">📈 Hızlı İstatistikler</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 32px; font-weight: 700; color: #3b82f6;"><%= modules.reduce((sum, m) => sum + m.count, 0) %></div>
+                            <div style="color: #64748b; font-size: 14px;">Toplam Kayıt</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 32px; font-weight: 700; color: #10b981;"><%= modules.length %></div>
+                            <div style="color: #64748b; font-size: 14px;">Aktif Modül</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 32px; font-weight: 700; color: #f59e0b;"><%= new Date().toLocaleDateString('tr-TR') %></div>
+                            <div style="color: #64748b; font-size: 14px;">Bugün</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Close sidebar when clicking a menu link (mobile UX)
+        document.querySelectorAll('#sidebar .menu a').forEach(function(a){
+            a.addEventListener('click', function(){
+                if (window.innerWidth <= 1024) closeSidebar();
+            })
+        })
+
+        // Topbar shadow on scroll
+        const topbar = document.querySelector('.topbar');
+        window.addEventListener('scroll', function(){
+            if (window.scrollY > 6) topbar.classList.add('scrolled');
+            else topbar.classList.remove('scrolled');
+        });
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('open');
+            document.body.classList.toggle('sidebar-open');
+        }
+
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            document.body.classList.remove('sidebar-open');
+        }
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.querySelector('.menu-toggle');
+            
+            if (window.innerWidth <= 1024 && 
+                !sidebar.contains(event.target) && 
+                !menuToggle.contains(event.target)) {
+                closeSidebar();
+            }
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 1024) {
+                closeSidebar();
+            }
+        });
+    </script>
+</body>
+</html>
+
+

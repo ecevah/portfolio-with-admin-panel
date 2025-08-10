@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Projects - Nehir</title>
+  <link rel="icon" href="/images/favico.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/stylesheets/site.css" />
+</head>
+<body>
+  <!-- Fixed Header -->
+  <header class="header">
+    <div class="container">
+      <div class="header-content">
+        <button class="menu-toggle" aria-label="Menüyü aç/kapat" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <nav class="nav-left">
+          <% (siteConfig && siteConfig.nav ? siteConfig.nav : [{label:'Home',href:'/'},{label:'About',href:'/about'},{label:'Projects',href:'/projects'}]).forEach(function(item){ %>
+            <a href="<%= item.href %>"><%= item.label %></a>
+          <% }) %>
+        </nav>
+        <a href="/" class="logo">
+          <% if (siteConfig && siteConfig.logoPath) { %>
+            <img src="<%= siteConfig.logoPath %>" alt="Logo" />
+          <% } else { %>
+            <span><%= siteConfig && siteConfig.siteName ? siteConfig.siteName : 'Nehir' %></span>
+          <% } %>
+        </a>
+        <div class="social-links">
+          <% (siteConfig && siteConfig.socialLinks ? siteConfig.socialLinks : []).forEach(function(s){ %>
+            <a href="<%= s.url %>" target="_blank" rel="noopener" title="<%= s.name %>">
+              <img src="<%= s.icon %>" alt="<%= s.name %>" />
+            </a>
+          <% }) %>
+        </div>
+      </div>
+    </div>
+    <nav class="mobile-nav" aria-label="Mobil Menü">
+      <div class="mobile-inner">
+        <div class="mobile-top">
+          <a href="/" class="mobile-logo" aria-label="Ana sayfa">
+            <% if (siteConfig && siteConfig.logoPath) { %>
+              <img src="<%= siteConfig.logoPath %>" alt="Logo" />
+            <% } else { %>
+              <span><%= siteConfig && siteConfig.siteName ? siteConfig.siteName : 'Nehir' %></span>
+            <% } %>
+          </a>
+          <button class="menu-close" aria-label="Menüyü kapat">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+        <div class="mobile-links">
+          <% (siteConfig && siteConfig.nav ? siteConfig.nav : [{label:'Home',href:'/'},{label:'About',href:'/about'},{label:'Projects',href:'/projects'}]).forEach(function(item){ %>
+            <a href="<%= item.href %>"><%= item.label %></a>
+          <% }) %>
+        </div>
+        <div class="mobile-socials">
+          <% (siteConfig && siteConfig.socialLinks ? siteConfig.socialLinks : []).forEach(function(s){ %>
+            <a href="<%= s.url %>" target="_blank" rel="noopener" title="<%= s.name %>">
+              <img src="<%= s.icon %>" alt="<%= s.name %>" />
+            </a>
+          <% }) %>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Projects Section -->
+  <section class="section" style="padding-top: 8rem;">
+    <div class="container">
+      <div class="section-header">
+        <h1 class="section-title">Project</h1>
+      </div>
+      <% if (projects && projects.length > 0) { %>
+        <div class="projects-grid projects-grid--tight">
+          <% projects.forEach(function(project) { %>
+            <a href="/projects/<%= project._id %>" class="project-card">
+              <% if (project.photo) { %>
+                <img src="<%= project.photo %>" alt="<%= project.name %>" class="project-image" />
+              <% } else { %>
+                <div class="project-image" style="background: #f5f5f5;"></div>
+              <% } %>
+              <div class="proj-overlay" aria-hidden="true"></div>
+              <div class="proj-caption"><%= project.name %></div>
+            </a>
+          <% }) %>
+        </div>
+      <% } else { %>
+        <div class="projects-grid">
+          <!-- Sample Projects for Demo - Matching pelinozbalci.com style -->
+          <div class="project-card fade-in">
+            <div class="project-image" style="background: #f5f5f5; display: flex; align-items: center; justify-content: center; color: var(--muted); font-weight: 400;">
+              Last Resort Powerbank
+            </div>
+            <div class="project-content">
+              <h3 class="project-title">Last Resort Powerbank</h3>
+              <p class="project-description">Sürdürülebilir enerji çözümü için yenilikçi tasarım yaklaşımı. Kullanıcı deneyimini ön planda tutan minimalist tasarım.</p>
+            </div>
+          </div>
+          
+          <div class="project-card fade-in" style="animation-delay: 0.1s;">
+            <div class="project-image" style="background: #f5f5f5; display: flex; align-items: center; justify-content: center; color: var(--muted); font-weight: 400;">
+              sPIN Memo Lamp
+            </div>
+            <div class="project-content">
+              <h3 class="project-title">sPIN Memo Lamp</h3>
+              <p class="project-description">Fonksiyonel ve estetik aydınlatma çözümü. Günlük kullanım için optimize edilmiş tasarım.</p>
+            </div>
+          </div>
+          
+          <div class="project-card fade-in" style="animation-delay: 0.2s;">
+            <div class="project-image" style="background: #f5f5f5; display: flex; align-items: center; justify-content: center; color: var(--muted); font-weight: 400;">
+              one&done Toothbrush
+            </div>
+            <div class="project-content">
+              <h3 class="project-title">one&done Toothbrush</h3>
+              <p class="project-description">Sürdürülebilir ağız bakımı için çevre dostu alternatif. Tek kullanımlık ürünlerin yerini alan yenilikçi çözüm.</p>
+            </div>
+          </div>
+          
+          <div class="project-card fade-in" style="animation-delay: 0.3s;">
+            <div class="project-image" style="background: #f5f5f5; display: flex; align-items: center; justify-content: center; color: var(--muted); font-weight: 400;">
+              Smart Home Hub
+            </div>
+            <div class="project-content">
+              <h3 class="project-title">Smart Home Hub</h3>
+              <p class="project-description">Ev otomasyonu için merkezi kontrol ünitesi. Sezgisel kullanıcı arayüzü ile teknolojiyi basitleştiren tasarım.</p>
+            </div>
+          </div>
+          
+          <div class="project-card fade-in" style="animation-delay: 0.4s;">
+            <div class="project-image" style="background: #f5f5f5; display: flex; align-items: center; justify-content: center; color: var(--muted); font-weight: 400;">
+              Eco Water Filter
+            </div>
+            <div class="project-content">
+              <h3 class="project-title">Eco Water Filter</h3>
+              <p class="project-description">Çevre dostu su filtreleme sistemi. Sürdürülebilir yaşam için tasarlanmış pratik çözüm.</p>
+            </div>
+          </div>
+          
+          <div class="project-card fade-in" style="animation-delay: 0.5s;">
+            <div class="project-image" style="background: #f5f5f5; display: flex; align-items: center; justify-content: center; color: var(--muted); font-weight: 400;">
+              Minimalist Chair
+            </div>
+            <div class="project-content">
+              <h3 class="project-title">Minimalist Chair</h3>
+              <p class="project-description">Modern ofis tasarımı için ergonomik sandalye. Form ve fonksiyon arasında mükemmel denge.</p>
+            </div>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-cta">
+        <div class="footer-left">
+          <h3 class="footer-head">Let’s work together!</h3>
+          <div class="footer-socials">
+            <% (siteConfig && siteConfig.socialLinks ? siteConfig.socialLinks : []).forEach(function(s){ %>
+              <a href="<%= s.url %>" target="_blank" rel="noopener" title="<%= s.name %>">
+                <img src="<%= s.icon %>" alt="<%= s.name %>" />
+              </a>
+            <% }) %>
+          </div>
+        </div>
+        <div class="footer-right">
+          <a class="footer-email" href="mailto:nehir@gmail.com">nehir@gmail.com</a>
+        </div>
+      </div>
+      <div class="footer-bottom">© 2025 Burcu Nehir Tüm</div>
+    </div>
+  </footer>
+
+  <script>
+    // Fade in animation on scroll
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.fade-in').forEach(el => { observer.observe(el); });
+
+    // Mobile nav toggle
+    (function(){
+      const toggle = document.querySelector('.menu-toggle');
+      const mobile = document.querySelector('.mobile-nav');
+      if (!toggle || !mobile) return;
+      toggle.addEventListener('click', function(){
+        const isOpen = document.body.classList.toggle('nav-open');
+        toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+      window.addEventListener('resize', function(){
+        if (window.innerWidth > 768 && document.body.classList.contains('nav-open')) {
+          document.body.classList.remove('nav-open');
+          toggle.setAttribute('aria-expanded', 'false');
+        }
+      });
+      const closer = document.querySelector('.menu-close');
+      if (closer) closer.addEventListener('click', function(){
+        document.body.classList.remove('nav-open');
+        toggle && toggle.setAttribute('aria-expanded', 'false');
+      });
+    })();
+  </script>
+</body>
+</html>
+
+

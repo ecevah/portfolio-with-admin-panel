@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="tr" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nehir - Industrial Designer</title>
+  <link rel="icon" href="/images/favico.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/stylesheets/site.css" />
+</head>
+<body class="page">
+  <!-- Fixed Header -->
+  <header class="header">
+    <div class="container">
+      <div class="header-content">
+        <button class="menu-toggle" aria-label="Menüyü aç/kapat" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <nav class="nav-left reveal-up">
+          <% (siteConfig && siteConfig.nav ? siteConfig.nav : [{label:'Home',href:'/'},{label:'About',href:'/about'},{label:'Projects',href:'/projects'}]).forEach(function(item){ %>
+            <a href="<%= item.href %>"><%= item.label %></a>
+          <% }) %>
+        </nav>
+        <a href="/" class="logo reveal-zoom">
+          <% if (siteConfig && siteConfig.logoPath) { %>
+            <img src="<%= siteConfig.logoPath %>" alt="Logo" />
+          <% } else { %>
+            <span><%= siteConfig && siteConfig.siteName ? siteConfig.siteName : 'Nehir' %></span>
+          <% } %>
+        </a>
+        <div class="social-links reveal-right">
+          <% (siteConfig && siteConfig.socialLinks ? siteConfig.socialLinks : []).forEach(function(s){ %>
+            <a href="<%= s.url %>" target="_blank" rel="noopener" title="<%= s.name %>">
+              <img src="<%= s.icon %>" alt="<%= s.name %>" />
+            </a>
+          <% }) %>
+        </div>
+      </div>
+    </div>
+    <nav class="mobile-nav" aria-label="Mobil Menü">
+      <div class="mobile-inner">
+        <div class="mobile-top">
+          <a href="/" class="mobile-logo" aria-label="Ana sayfa">
+            <% if (siteConfig && siteConfig.logoPath) { %>
+              <img src="<%= siteConfig.logoPath %>" alt="Logo" />
+            <% } else { %>
+              <span><%= siteConfig && siteConfig.siteName ? siteConfig.siteName : 'Nehir' %></span>
+            <% } %>
+          </a>
+          <button class="menu-close" aria-label="Menüyü kapat">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+        <div class="mobile-links">
+          <% (siteConfig && siteConfig.nav ? siteConfig.nav : [{label:'Home',href:'/'},{label:'About',href:'/about'},{label:'Projects',href:'/projects'}]).forEach(function(item){ %>
+            <a href="<%= item.href %>"><%= item.label %></a>
+          <% }) %>
+        </div>
+        <div class="mobile-socials">
+          <% (siteConfig && siteConfig.socialLinks ? siteConfig.socialLinks : []).forEach(function(s){ %>
+            <a href="<%= s.url %>" target="_blank" rel="noopener" title="<%= s.name %>">
+              <img src="<%= s.icon %>" alt="<%= s.name %>" />
+            </a>
+          <% }) %>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-full" style="background-image: url('<%= (homepage && homepage.image) ? homepage.image : ((projects && projects[0] && projects[0].photo) ? projects[0].photo : '/images/logo.png') %>');">
+    <div class="container">
+      <div class="hero-inner reveal-up">
+        <h1 class="hero-title">
+          I design
+          <span class="scribble-underline">products
+            <div class="scribble-underline-svg">
+              <img src="/images/line/line-wave.svg" alt="" />
+            </div>
+          </span>
+          that bring joy
+        </h1>
+        <% if (homepage && homepage.subtitle) { %>
+          <p class="hero-sub"><%= homepage.subtitle %></p>
+        <% } %>
+        
+        <!-- Scroll down arrow -->
+        <div class="scroll-arrow">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7 10L12 15L17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About card under hero -->
+  <section class="section section--about-preview">
+    <div class="container">
+      <div class="about-card reveal-up">
+        <div class="about-card__text">
+          <h2>About</h2>
+          <% if (homepage && homepage.aboutText) { %>
+            <p><%= homepage.aboutText %></p>
+          <% } else { %>
+            <p>Merhaba! Endüstriyel tasarımda kullanıcı odaklı çözümler üretir, ürün ve deneyimleri şekillendiririm.</p>
+          <% } %>
+          <a href="/about" class="cta-button">About me</a>
+        </div>
+        <div class="about-card__image">
+          <% if (homepage && homepage.aboutImage) { %>
+            <img src="<%= homepage.aboutImage %>" alt="About image" />
+          <% } else { %>
+            <div class="about-card__image--placeholder">Görsel</div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Explore My Work Section -->
+  <section class="section section--work">
+    <div class="container">
+      <div class="section-header reveal-up">
+        <h2 class="section-title">Explore my work</h2>
+      </div>
+      
+      <% if (projects && projects.length > 0) { %>
+        <div class="work-grid stagger-fade">
+          <% projects.slice(0, 9).forEach(function(project, index) { %>
+            <a href="/projects/<%= project._id %>" class="work-card">
+              <div class="work-tile">
+                <% if (project.photo) { %>
+                  <img src="<%= project.photo %>" alt="<%= project.name %>" />
+                <% } else { %>
+                  <div class="work-placeholder">Proje Görseli</div>
+                <% } %>
+                <div class="work-overlay" aria-hidden="true">
+                  <div class="work-caption"><span><%= project.name %></span></div>
+                </div>
+              </div>
+            </a>
+          <% }) %>
+        </div>
+      <% } %>
+    </div>
+  </section>
+
+  <!-- Recognitions Section -->
+  <section class="section section--recognitions">
+    <div class="container reveal-up">
+      <div class="section-header">
+        <h2 class="section-title">Recognitions</h2>
+      </div>
+      <% if (links && links.length > 0) { %>
+        <div class="recognitions-logos">
+          <% links.forEach(function(link) { %>
+            <div class="recognitions-logo">
+              <% if (link.logo) { %>
+                <a href="<%= link.url %>" target="_blank" rel="noopener">
+                  <img src="<%= link.logo %>" alt="<%= link.name || 'Logo' %>">
+                </a>
+              <% } %>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+    </div>
+  </section>
+
+  <!-- Quotes Marquee (auto-scrolling, no headers, non-interactive) -->
+  <% if (quotes && quotes.length > 0) { %>
+    <section class="quotes-marquee" aria-hidden="true">
+      <div class="container">
+        <div class="marquee-row marquee-left">
+          <div class="marquee-content">
+            <% for (var r = 0; r < 4; r++) { %>
+              <% quotes.forEach(function(q){ %>
+                <div class="marquee-item"><span><%= q.text %></span></div>
+              <% }) %>
+            <% } %>
+          </div>
+        </div>
+        <div class="marquee-row marquee-right">
+          <div class="marquee-content">
+            <% for (var r = 0; r < 4; r++) { %>
+              <% quotes.forEach(function(q){ %>
+                <div class="marquee-item"><span><%= q.text %></span></div>
+              <% }) %>
+            <% } %>
+          </div>
+        </div>
+        <div class="marquee-row marquee-left">
+          <div class="marquee-content">
+            <% for (var r = 0; r < 4; r++) { %>
+              <% quotes.forEach(function(q){ %>
+                <div class="marquee-item"><span><%= q.text %></span></div>
+              <% }) %>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </section>
+  <% } %>
+
+  <!-- Instagram Section (only if there are items in slice 9..14) -->
+  <% var insta = (projects && projects.length > 9) ? projects.slice(9, 14) : []; %>
+  <% if (insta.length > 0) { %>
+    <section class="section section--instagram">
+      <div class="container">
+        <div class="section-header reveal-up">
+          <h2 class="section-title">Follow me on Instagram</h2>
+        </div>
+        <div class="insta-grid stagger-fade">
+          <% insta.forEach(function(project, index) { %>
+            <a href="/projects/<%= project._id %>" class="insta-card">
+              <div class="insta-tile">
+                <% if (project.photo) { %>
+                  <img src="<%= project.photo %>" alt="<%= project.name %>">
+                <% } else { %>
+                  <div class="work-placeholder">Proje Görseli</div>
+                <% } %>
+              </div>
+            </a>
+          <% }) %>
+        </div>
+      </div>
+    </section>
+  <% } %>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-cta reveal-up">
+        <div class="footer-left">
+          <h3 class="footer-head">Let’s work together!</h3>
+          <div class="footer-socials">
+            <% (siteConfig && siteConfig.socialLinks ? siteConfig.socialLinks : []).forEach(function(s){ %>
+              <a href="<%= s.url %>" target="_blank" rel="noopener" title="<%= s.name %>">
+                <img src="<%= s.icon %>" alt="<%= s.name %>" />
+              </a>
+            <% }) %>
+          </div>
+        </div>
+        <div class="footer-right">
+          <a class="footer-email" href="mailto:nehir@gmail.com">nehir@gmail.com</a>
+        </div>
+      </div>
+      <div class="footer-bottom">© 2025 Burcu Nehir Tüm</div>
+    </div>
+  </footer>
+  
+  <script>
+    // Mark page loaded for page-enter animation
+    window.addEventListener('load', function(){
+      document.documentElement.classList.add('is-loaded');
+    });
+
+    // Scroll reveal observer
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) entry.target.classList.add('is-visible');
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal-up, .reveal-right, .reveal-zoom, .stagger-fade').forEach((el) => revealObserver.observe(el));
+
+    // Mobile nav toggle
+    (function(){
+      const toggle = document.querySelector('.menu-toggle');
+      const mobile = document.querySelector('.mobile-nav');
+      if (!toggle || !mobile) return;
+      toggle.addEventListener('click', function(){
+        const isOpen = document.body.classList.toggle('nav-open');
+        toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+      window.addEventListener('resize', function(){
+        if (window.innerWidth > 768 && document.body.classList.contains('nav-open')) {
+          document.body.classList.remove('nav-open');
+          toggle.setAttribute('aria-expanded', 'false');
+        }
+      });
+      const closer = document.querySelector('.menu-close');
+      if (closer) closer.addEventListener('click', function(){
+        document.body.classList.remove('nav-open');
+        toggle && toggle.setAttribute('aria-expanded', 'false');
+      });
+    })();
+
+    // Parallax for hero background (lightweight, reduced motion aware)
+    (function(){
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReduced) return;
+      const hero = document.querySelector('.hero-full');
+      if (!hero) return;
+      const speed = 0.35; // smaller = slower
+      function onScroll(){
+        const rect = hero.getBoundingClientRect();
+        // Only adjust when in viewport
+        if (rect.bottom > 0 && rect.top < window.innerHeight) {
+          const offset = Math.round((rect.top) * speed);
+          hero.style.backgroundPosition = `center ${offset}px`;
+        }
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+    })();
+  </script>
+</body>
+</html>
+
+
